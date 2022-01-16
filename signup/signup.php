@@ -1,8 +1,7 @@
 <?php 
 
-require_once $_SERVER['DOCUMENT_ROOT'].'/lib/dbConnect.php';
-
-
+    require_once $_SERVER['DOCUMENT_ROOT'].'/realMarketServer/lib/dbConnect.php';
+  
     $asd=123;
     if(isset($_POST['id'])){
 

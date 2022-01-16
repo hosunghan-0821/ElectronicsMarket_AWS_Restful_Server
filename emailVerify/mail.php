@@ -3,7 +3,7 @@
     // $postData=json_decode(file_get_contents('php://input'));
     // $mail = json_decode($_POST['email'],true); 
     
-        require_once $_SERVER['DOCUMENT_ROOT'].'/lib/dbConnect.php';
+        require_once $_SERVER['DOCUMENT_ROOT'].'/realMarketServer/lib/dbConnect.php';
         $verifyNumber = rand(1000,10000);
         $message = '이메일 인증 확인 칸의 다음 값을 넣어주세요 '.$verifyNumber;
         $to = $_POST['email'];

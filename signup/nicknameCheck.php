@@ -1,6 +1,7 @@
 <?php 
 
-    require_once $_SERVER['DOCUMENT_ROOT'].'/lib/dbConnect.php';
+    require_once $_SERVER['DOCUMENT_ROOT'].'/realMarketServer/lib/dbConnect.php';
+
     $arr=array();
     if(isset($_POST['nickname'])){
         $nickname=$_POST['nickname'];

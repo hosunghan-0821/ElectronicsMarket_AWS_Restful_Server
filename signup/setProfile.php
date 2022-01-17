@@ -5,10 +5,11 @@
 
     if(isset($_FILES['upload'])){
 
+        $result=$_FILES['upload']['error'];
         $id=$_GET['email'];
         $tmp_file=$_FILES['upload']['tmp_name'];
         $nowDate = date("Ymd_His");
-        $file_name=$id."_profileImage".$nowDate.".png";
+        $file_name=$id."_profileImage".$nowDate.".jpg";
        
         //이전 이미지 파일 삭제
         $sql="SELECT Member_image_route FROM Market_member Where Member_id='$id' "; 

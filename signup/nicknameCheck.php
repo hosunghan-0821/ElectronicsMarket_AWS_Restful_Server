@@ -9,11 +9,13 @@
         $sql="SELECT * FROM Market_member WHERE Member_nickname='$nickname'";
         $selectResult=mysqli_query($db_connect,$sql);
         if(mysqli_num_rows($selectResult)>=1){
+           
             $arr['message']="닉네임 중복";
             echo json_encode($arr,JSON_UNESCAPED_UNICODE);
             return;
         }
         else{
+            $arr['isSuccess']=true;
             $arr['message']="닉네임 사용가능";
             echo json_encode($arr,JSON_UNESCAPED_UNICODE);
 

@@ -76,7 +76,7 @@
     $mail->addAddress($to,'기존회원');
 
     //Set the subject line
-    $mail->Subject = 'UsedElectronicsMarket 이메일 인증';
+    $mail->Subject = 'UsedElectronicsMarket 비밀번호 찾기';
 
     //Read an HTML message body from an external file, convert referenced images to embedded,
     //convert HTML into a basic plain-text alternative body

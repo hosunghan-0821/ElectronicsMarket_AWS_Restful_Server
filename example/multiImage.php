@@ -1,4 +1,6 @@
 <?php
+
+    $result=$_FILES['image0']['error'];
     $tmp_file=$_FILES;
     $imageNumber=count($tmp_file);
     for($i=0;$i<$imageNumber;$i++){

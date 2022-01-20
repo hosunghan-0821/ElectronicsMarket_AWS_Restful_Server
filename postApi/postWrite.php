@@ -19,10 +19,12 @@
         $title=$_POST['title'];
         $price=$_POST['price'];
         $contents=$_POST['contents'];
-        $category=$_POST['sellType'];  
+        $sellType=$_POST['sellType'];
+        $category=$_POST['category'];  
+        $delivery=$_POST['deliveryCost'];
 
-        $sql="INSERT INTO Post (Post_writer,Post_title,Post_price,Post_contents,Post_status,Post_image_num,Post_category)
-        values('$nickname','$title','$price','$contents','Y','$imageNumber','$category')
+        $sql="INSERT INTO Post (Post_writer,Post_title,Post_price,Post_contents,Post_status,Post_image_num,Post_category,Post_deliver_price,Post_sellType)
+        values('$nickname','$title','$price','$contents','Y','$imageNumber','$category','$delivery','$sellType')
         ";
         
         $insertResult=mysqli_query($db_connect,$sql);

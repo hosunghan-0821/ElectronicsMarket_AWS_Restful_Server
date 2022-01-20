@@ -48,12 +48,11 @@
                 $insertResult=mysqli_query($db_connect,$sql);
                 
             }
-
-            return;
+            $arr['message']=$postNum;
+    
         }
         else{
             mysqli_error($db_connect);
-            return;
         }
     }
     else{
@@ -61,19 +60,8 @@
         echo json_encode($arr,JSON_UNESCAPED_UNICODE);
         return;
     }
-    $result=$_FILES['image0']['error'];
-    $tmp_file=$_FILES;
-    $imageNumber=count($tmp_file);
-    for($i=0;$i<$imageNumber;$i++){
-
-        $name=$tmp_file['image'.$i]['tmp_name'];
-        $result=move_uploaded_file($name,'../Resource/postImage/'.'image'.$i.'.jpg');
-        $name = $_REQUEST['name'];
-    }
-
-    $result=$_FILES['error'];
-    $asd;
-    $arr['isSuccess']=false;
+    $arr['isSuccess']=true;
     echo json_encode($arr,JSON_UNESCAPED_UNICODE);
+    
 
 ?>

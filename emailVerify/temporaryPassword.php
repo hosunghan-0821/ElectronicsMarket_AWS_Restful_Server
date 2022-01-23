@@ -80,10 +80,10 @@
     $mail->addReplyTo('winsomed96@naver.com', 'UsedElectronicsMarket');
 
     //Set who the message is to be sent to
-    $mail->addAddress($to,'신규회원');
+    $mail->addAddress($to,'기존회원');
 
     //Set the subject line
-    $mail->Subject = 'UsedElectronicsMarket 이메일 인증';
+    $mail->Subject = 'UsedElectronicsMarket 임시 비밀번호 발급';
 
     //Read an HTML message body from an external file, convert referenced images to embedded,
     //convert HTML into a basic plain-text alternative body

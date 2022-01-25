@@ -19,6 +19,7 @@
             $arr['postPrice']=$Data['Post_price'];
             $arr['postSellType']=$Data['Post_sellType'];
             $arr['postRegTime']=$Data['Post_reg_time']; 
+            $arr['postNum']=$postNum;
 
             $sql="SELECT * FROM Image where Image_post='$postNum' order by Image_reg_time desc, Image_no asc";
             $selectResult2=mysqli_query($db_connect,$sql);

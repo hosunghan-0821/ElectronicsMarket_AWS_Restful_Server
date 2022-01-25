@@ -28,7 +28,7 @@
             $arr['memberImage']=$Data['Member_image_route'];
         }
 
-        $sql="SELECT * FROM Image where Image_post='$postNum' ";
+        $sql="SELECT * FROM Image where Image_post='$postNum' order by Image_order asc ";
         $selectResult=mysqli_query($db_connect,$sql);
         if($selectResult){
             $i=1;

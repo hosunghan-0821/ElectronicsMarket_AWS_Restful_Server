@@ -27,6 +27,7 @@
         $category=$_POST['category'];  
         $delivery=$_POST['deliveryCost'];
 
+        $nowDate = date("Ymd-His");
         $sql=
         "INSERT INTO Post
         (Post_writer,
@@ -41,8 +42,9 @@
         Post_location_name,
         Post_location_address,
         Post_location_latitude,
-        Post_location_longitude)
-        values('$nickname','$title','$price','$contents','Y','$imageNumber','$category','$delivery','$sellType','$placeName','$addressName','$latitude','$longitude')
+        Post_location_longitude,
+        Post_reg_time)
+        values('$nickname','$title','$price','$contents','Y','$imageNumber','$category','$delivery','$sellType','$placeName','$addressName','$latitude','$longitude','$nowDate')
         ";
         
         $insertResult=mysqli_query($db_connect,$sql);
@@ -54,7 +56,7 @@
             //파일경로
             $file_path;
             $file_name='postNum_'.$postNum.'_';
-            $nowDate = date("Ymd_His");
+         
             for($i=0;$i<$imageNumber;$i++){
                 $file_name='postNum_'.$postNum.'_';
                 $name=$tmp_file['image'.$i]['tmp_name'];

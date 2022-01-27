@@ -15,10 +15,22 @@
         
         $selectResult=mysqli_query($db_connect,$sql);
         if($selectResult){
+
             $Data=mysqli_fetch_array($selectResult);
             $nickname=$Data['Post_writer'];
            //작성자
             $arr['nickname']=$Data['Post_writer'];
+
+             //작상자 아이디
+            $sql="SELECT Member_id from Market_member where Member_nickname='$nickname'";
+            $memberId=mysqli_query($db_connect,$sql);
+            $userData=mysqli_fetch_array($memberId);
+            $arr['memberId']=$userData['Member_id'];
+        
+            $sql="SELECT * FROM Post where Post_Writer ='$nickname'";
+            $selectResult=mysqli_query($db_connect,$sql);
+            $productNum=mysqli_num_rows($selectResult);
+            $arr['productNum']=$productNum;
             
             //제목 카테고리 판매유형
             $arr['postTitle']=$Data['Post_title'];

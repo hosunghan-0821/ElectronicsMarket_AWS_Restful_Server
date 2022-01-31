@@ -10,7 +10,7 @@
         $addressName=$_POST['addressName'];
         $latitude=$_POST['latitude'];
         $longitude=$_POST['longitude'];
-
+        $placeDetail=$_POST['placeDetail'];
         $title=$_POST['title'];
         $price=$_POST['price'];
         $contents=$_POST['contents'];
@@ -42,7 +42,7 @@
         //데이터 전부 엎어치기 해야지
         $tmp_file=$_FILES;
 
-        $sql="UPDATE Post SET Post_sellType='$sellType',Post_deliver_price='$delivery',Post_title='$title',Post_price='$price',Post_contents='$contents',Post_category='$category',Post_location_name='$placeName',Post_location_address='$addressName',Post_location_latitude='$latitude',Post_location_longitude='$longitude' WHERE Post_no=$postIntNum";
+        $sql="UPDATE Post SET Post_place_detail='$placeDetail',Post_sellType='$sellType',Post_deliver_price='$delivery',Post_title='$title',Post_price='$price',Post_contents='$contents',Post_category='$category',Post_location_name='$placeName',Post_location_address='$addressName',Post_location_latitude='$latitude',Post_location_longitude='$longitude' WHERE Post_no=$postIntNum";
         $updateResult=mysqli_query($db_connect,$sql);
 
         //일단 경로를 imageListInfo 분해해야지

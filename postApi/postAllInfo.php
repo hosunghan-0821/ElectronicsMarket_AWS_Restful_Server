@@ -6,7 +6,29 @@
 
     $postInfo=array();
 
-    $sql="SELECT * FROM Post ORDER BY Post_no DESC ";
+    if(isset($_POST['finalPostNum'])){
+        $finalPostNum=$_POST['finalPostNum'];
+        $phasingNum=$_POST['phasingNum'];
+    }
+  
+    //새로고침이 아닐 경우.
+    if($phasingNum!=='update'){
+          //맨 처음 phasing 해줄 때, 즉 커서가 존재하지 않을 때, 처음부터 5개만 제공
+        if($finalPostNum==='0'){
+            $sql="SELECT * FROM Post ORDER BY Post_no DESC limit $phasingNum";
+        }
+        //커서가 존재할 경우
+        else{
+            $sql="SELECT * FROM Post where Post_no<$finalPostNum ORDER BY Post_no DESC limit $phasingNum ";
+        }
+    }
+    
+    //새로고침 일 경우, 기존의 data정보들을 다시 쏴줘서 업데이트 해준다.
+    else{
+        $sql="SELECT * FROM Post where Post_no>=$finalPostNum ORDER BY Post_no DESC";
+    }
+ 
+   
     $selectResult=mysqli_query($db_connect,$sql);
    
 
@@ -49,7 +71,9 @@
           }
 
           $postInformation2["postInfo"]=$postInfo;
-    
+          $productNum=count($postInfo);
+
+          $postInformation2['productNum']=$productNum;
           echo json_encode($postInformation2,JSON_UNESCAPED_UNICODE);
     }
 

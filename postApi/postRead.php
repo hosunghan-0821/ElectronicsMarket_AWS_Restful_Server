@@ -8,8 +8,12 @@
         $postNum=$_POST['postNum'];
 
         //  $sql = "UPDATE PostTable SET Post_View = Post_View + 1 WHERE Post_Number='$serialNum'";
-        $sql="UPDATE Post SET Post_view=Post_view + 1 WHERE Post_no='$postNum' ";
-        mysqli_query($db_connect,$sql);
+        if($_POST['purpose']==="read"){
+
+            $sql="UPDATE Post SET Post_view=Post_view + 1 WHERE Post_no='$postNum' ";
+            mysqli_query($db_connect,$sql);
+
+        }
 
         $sql="SELECT * FROM Post where Post_no='$postNum' ";
         
@@ -59,6 +63,7 @@
                  $arr['postLocationAddress']=$Data['Post_location_address'];
                  $arr['postLocationLatitude']=$Data['Post_location_latitude'];
                  $arr['postLocationLongitude']=$Data['Post_location_longitude'];
+                 $arr['postLocationDetail']=$Data['Post_place_detail'];
             }
 
 

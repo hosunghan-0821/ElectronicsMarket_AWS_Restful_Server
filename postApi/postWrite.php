@@ -26,6 +26,7 @@
         $sellType=$_POST['sellType'];
         $category=$_POST['category'];  
         $delivery=$_POST['deliveryCost'];
+        $placeDetail=$_POST['placeDetail'];
 
         $nowDate = date("Ymd-His");
         $sql=
@@ -43,8 +44,9 @@
         Post_location_address,
         Post_location_latitude,
         Post_location_longitude,
-        Post_reg_time)
-        values('$nickname','$title','$price','$contents','Y','$imageNumber','$category','$delivery','$sellType','$placeName','$addressName','$latitude','$longitude','$nowDate')
+        Post_reg_time,
+        Post_place_detail)
+        values('$nickname','$title','$price','$contents','Y','$imageNumber','$category','$delivery','$sellType','$placeName','$addressName','$latitude','$longitude','$nowDate','$placeDetail')
         ";
         
         $insertResult=mysqli_query($db_connect,$sql);

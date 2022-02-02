@@ -27,18 +27,27 @@
                     return;
                 }
             }
+            
+            //찜목록 테이블에 해당 정보들 insert
             $sql="INSERT INTO Post_like(Like_post,Like_person) values('$postNum','$nickname')";
             $insertResult=mysqli_query($db_connect,$sql);
-            $arr['isSuccess']=true;
-            echo json_encode($arr,JSON_UNESCAPED_UNICODE);
-            return;
+            if($insertResult){
+                $sql="UPDATE Post SET Post_like=Post_like + 1 WHERE Post_no='$postNum' ";
+                mysqli_query($db_connect,$sql);    
+                $arr['isSuccess']=true;
+                echo json_encode($arr,JSON_UNESCAPED_UNICODE);
+                return;
+            }
+
 
         }
         //찜목록 삭제할 경우.
         else{
-            $sql="DELETE FROM Post_like where (Like_post='$postNum',Like_person='$nickname')";
+            $sql="DELETE FROM Post_like where (Like_post=$postNum and Like_person='$nickname')";
             $deleteResult=mysqli_query($db_connect,$sql);
             if($deleteResult){
+                $sql="UPDATE Post SET Post_like=Post_like - 1 WHERE Post_no='$postNum' ";
+                mysqli_query($db_connect,$sql);  
 
                 $arr['isSuccess']=true;
                 echo json_encode($arr,JSON_UNESCAPED_UNICODE);

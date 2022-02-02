@@ -4,7 +4,16 @@
     require_once $_SERVER['DOCUMENT_ROOT'].'/realMarketServer/lib/dbConnect.php';
   
     $imageArray=array();
+
     if(isset($_POST['postNum'])){
+        //지금 글을 읽는 client의 아이디를 갖고, 닉네임을 구한 후, 그 닉네임이 이 게시글을 좋아요 누른지 확인하여 값 알려주기
+        $email=$_POST['email'];
+        if($email!=="update"){
+            $sql="SELECT Member_nickname FROM Market_member where Member_id='$email'";
+            $selectResult=mysqli_query($db_connect,$sql);
+            $Data=mysqli_fetch_array($selectResult);
+            $nickname=$Data['Member_nickname'];
+        }
         $postNum=$_POST['postNum'];
 
         //  $sql = "UPDATE PostTable SET Post_View = Post_View + 1 WHERE Post_Number='$serialNum'";
@@ -15,14 +24,31 @@
 
         }
 
-        $sql="SELECT * FROM Post where Post_no='$postNum' ";
-        
+        // $sql="SELECT * FROM Post where Post_no='$postNum' ";
+        $sql ="SELECT * FROM Post left join Post_like on Post_no=Like_post where Post_no='$postNum'";
         $selectResult=mysqli_query($db_connect,$sql);
-        if($selectResult){
 
-            $Data=mysqli_fetch_array($selectResult);
+        if($selectResult){
+            $clientIsLike=false;
+            while($Data=mysqli_fetch_assoc($selectResult)){
+                $tempData=$Data;
+                if( $Data['Like_person']===$nickname){
+                    $clientIsLike=true;
+                    break;
+                }
+            }
+
+            $selectResult=mysqli_query($db_connect,$sql);
+            // $Data=mysqli_fetch_array($selectResult);
+            $Data=$tempData;
+            $arr['clientIsLike']=$clientIsLike;
+         
+            // foreach($Data as $key=>$value ){
+            //     $keyV=$key;
+            //     $valueV=$value;
+            // }
             $nickname=$Data['Post_writer'];
-           //작성자
+            //작성자
             $arr['nickname']=$Data['Post_writer'];
 
              //작상자 아이디

@@ -1,42 +1,37 @@
 <?php 
+
     require_once $_SERVER['DOCUMENT_ROOT'].'/realMarketServer/lib/dbConnect.php';
-    header('Content-Type: application/json');  
-    $postInformation2=array();
-   
+    header('Content-Type: application/json'); 
+    if(isset($_POST['email'])){
+        $email=$_POST['email'];
+        $state=$_POST['state'];
 
-    $postInfo=array();
-
-    if(isset($_POST['finalPostNum'])){
-        $finalPostNum=$_POST['finalPostNum'];
-        $phasingNum=$_POST['phasingNum'];
+        //email 통해서 닉네임 가져오기
+        $sql="SELECT Member_nickname FROM Market_member where Member_id='$email'";
+        $selectResult=mysqli_query($db_connect,$sql);
+        $Data=mysqli_fetch_array($selectResult);
+        $nickname=$Data['Member_nickname'];
     }
-  
-    //새로고침이 아닐 경우.
-    if($phasingNum!=='update'){
-          //맨 처음 phasing 해줄 때, 즉 커서가 존재하지 않을 때, 처음부터 5개만 제공
-        if($finalPostNum==='0'){
-            $sql="SELECT * FROM Post ORDER BY Post_no DESC limit $phasingNum";
-        }
-        //커서가 존재할 경우
-        else{
-            $sql="SELECT * FROM Post where Post_no<$finalPostNum ORDER BY Post_no DESC limit $phasingNum ";
-        }
-    }
-    
-    //새로고침 일 경우, 기존의 data정보들을 다시 쏴줘서 업데이트 해준다.
     else{
-        $sql="SELECT * FROM Post where Post_no>=$finalPostNum ORDER BY Post_no DESC";
+        return;
     }
- 
-   
+    $postInfo=array();
+    $postAllInfo=array();
 
-    
+    //state에 따라서 해당하는 정보들만 추려서 보내줘야함 => sql만 바꿔서 쿼리하고 보내주는 정보는 동일하다. 
+    if($state==="loveList"){
+        $sql="SELECT * FROM Post_like 
+        left join Post on Post_like.Like_post=Post.Post_no 
+        where Like_person='$nickname' 
+        order by Like_no desc";
+    }
+
     $selectResult=mysqli_query($db_connect,$sql);
-   
 
     if($selectResult){
 
         while($Data=mysqli_fetch_array($selectResult)){
+
             $imageArray=array();
             $postNum=$Data['Post_no'];
             $arr['postTitle']=$Data['Post_title'];
@@ -70,15 +65,17 @@
             array_push($imageArray,$imageRoute);
             $arr['imageRoute']=$imageArray;
             array_push($postInfo,$arr);
+
           }
-
-          $postInformation2["postInfo"]=$postInfo;
+          $postAllInfo["postInfo"]=$postInfo;
           $productNum=count($postInfo);
-
-          $postInformation2['productNum']=$productNum;
-          echo json_encode($postInformation2,JSON_UNESCAPED_UNICODE);
+          $postAllInfo["productNum"]=$productNum;
+          echo json_encode( $postAllInfo,JSON_UNESCAPED_UNICODE);
+    }
+    else{
+        return;
     }
 
-    
+
 
 ?>

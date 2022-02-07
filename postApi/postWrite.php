@@ -65,7 +65,7 @@
                 $file_name.=$nowDate.'_';
                 $file_name.=$i.'.jpg';
                 $result=move_uploaded_file($name,'../Resource/postImage/'.$file_name);
-                $file_http_path="http://ec2-54-180-115-89.ap-northeast-2.compute.amazonaws.com/realMarketServer/Resource/postImage/".$file_name;
+                $file_http_path="http://ec2-3-34-199-7.ap-northeast-2.compute.amazonaws.com/realMarketServer/Resource/postImage/".$file_name;
                 $sql="INSERT INTO Image (Image_post,Image_route,Image_file_name,Image_order) values($postNum,'$file_http_path','$file_name','$i')";
                 $insertResult=mysqli_query($db_connect,$sql);
                 

@@ -21,7 +21,7 @@
         $file_path=$file_standard_path.$file_name;
         $result=move_uploaded_file($tmp_file,$file_path);
         if($result){
-            $file_http_path="http://ec2-54-180-115-89.ap-northeast-2.compute.amazonaws.com/realMarketServer/Resource/".$file_name;
+            $file_http_path="http://ec2-3-34-199-7.ap-northeast-2.compute.amazonaws.com/realMarketServer/Resource/".$file_name;
            
             $sql="UPDATE Market_member SET Member_image_route='$file_http_path' WHERE Member_id='$id'";
             $updateResult=mysqli_query($db_connect,$sql);

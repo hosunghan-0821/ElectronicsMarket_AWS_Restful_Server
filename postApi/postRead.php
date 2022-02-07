@@ -6,13 +6,20 @@
     $imageArray=array();
 
     if(isset($_POST['postNum'])){
+        //ASD
         //지금 글을 읽는 client의 아이디를 갖고, 닉네임을 구한 후, 그 닉네임이 이 게시글을 좋아요 누른지 확인하여 값 알려주기
         $email=$_POST['email'];
         if($email!=="update"){
-            $sql="SELECT Member_nickname FROM Market_member where Member_id='$email'";
+            $sql="SELECT * FROM Market_member where Member_id='$email'";
             $selectResult=mysqli_query($db_connect,$sql);
             $Data=mysqli_fetch_array($selectResult);
+           
+            $phoneNumber=$Data['Member_phone_number'];
             $nickname=$Data['Member_nickname'];
+            $addressDetail=$Data['Member_standard_address'];
+            $deliveryRequire=$Data['Member_standard_delivery_require'];
+
+            $clientNickname=$nickname;
         }
         $postNum=$_POST['postNum'];
 
@@ -23,6 +30,14 @@
             mysqli_query($db_connect,$sql);
 
         }
+        //getPost의 목적이 택배결제를 하기위해 불려진것이라면
+        if($_POST['purpose']==="delivery"){
+
+            $arr['addressDetail']=$addressDetail;
+            $arr['deliveryRequire']=$deliveryRequire;
+
+        }
+
 
         // $sql="SELECT * FROM Post where Post_no='$postNum' ";
         $sql ="SELECT * FROM Post left join Post_like on Post_no=Like_post where Post_no='$postNum'";
@@ -50,6 +65,8 @@
             $nickname=$Data['Post_writer'];
             //작성자
             $arr['nickname']=$Data['Post_writer'];
+            $arr['clientNickname']=$clientNickname;
+            $arr['clientPhoneNumber']=$phoneNumber;
 
              //작상자 아이디
             $sql="SELECT Member_id from Market_member where Member_nickname='$nickname'";
@@ -115,6 +132,7 @@
 
             $arr['imageRoute']=$imageArray;
         }
+
 
         echo json_encode($arr,JSON_UNESCAPED_UNICODE);
 

@@ -10,8 +10,8 @@
         $postNum=$_POST['postNum'];
         $payType=$_POST['payType'];
         $tradeType=$_POST['tradeType'];
+        $receiverName=$_POST['buyerName'];
       
-
         //request로 넘어온 변수들 정의 주소지 관련
         $address=$_POST['address'];
         $addressDetail=$_POST['addressDetail'];
@@ -27,8 +27,6 @@
             $updateResult=mysqli_query($db_connect,$sql);
 
         }
-
-
         //구매자 아이디 얻어서, 닉네임 얻기,
         $sql="SELECT * FROM Market_member where Member_id='$email'";
         $selectResult=mysqli_query($db_connect,$sql);
@@ -43,8 +41,13 @@
         $Data=mysqli_fetch_array($selectResult);
 
         $sellerNickname=$Data['Post_writer'];
-        $nowDate = date("Ymd-His");
+        $nowDate = date("Y/m/d-H:i:s");
 
+        //post table update 해줘야함 누가 이 게시글 제품을 샀는지.
+        $sql="UPDATE Post SET Post_buyer='$buyerNickname' where Post_no='$postNum'";
+        mysqli_query($db_connect,$sql);
+
+        //결제정보 모아놓는 trade table에 정보 기입
         $sql="INSERT INTO Post_trade
         (Trade_post_no,
         Trade_buyer,
@@ -76,10 +79,19 @@
         Delivery_phone_number,
         Delivery_address,
         Delivery_require)
-        values('$tradeNo','$buyerNickname','$buyerPhoneNumber','$finalAddress','$finalDeliveryDetail')";
+        values('$tradeNo','$receiverName','$buyerPhoneNumber','$finalAddress','$finalDeliveryDetail')";
         $insertResult=mysqli_query($db_connect,$sql);
-        $as12;
-        
+       
+        $arr['isSuccess']=true;
+        $arr['tradeNum']=$tradeNo;
+        echo json_encode($arr,JSON_UNESCAPED_UNICODE);
+        return;
+    }
+    else{
+        $arr['isSuccess']=false;
+        echo json_encode($arr,JSON_UNESCAPED_UNICODE);
+        return;
+
     }
    
 ?>

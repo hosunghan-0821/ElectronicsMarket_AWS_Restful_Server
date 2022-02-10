@@ -21,9 +21,14 @@
         $finalAddress=$address."__".$addressDetail;
         $finalDeliveryDetail=$deliveryDetail."__".$deliveryDetail2;
 
+
+        //택배 결제완료가 되었다. post_status 를 변경시켜주자
+        $sql="UPDATE Post SET Post_status='DR' where Post_no='$postNum'";
+        mysqli_query($db_connect,$sql);
+
         //기본주소지 설정을 했을 때, 정보 변경해주기
         if(isset($_POST['setStandardAddress'])){
-            $sql="UPDATE Market_member SET Member_standard_address='$finalAddress',Member_standard_delivery_require='$finalDeliveryDetail' where Member_id='$email' ";
+            $sql="UPDATE Market_member SET Member_standard_address='$finalAddress',Member_standard_delivery_require='$finalDeliveryDetail',Member_standard_receiver_name='$receiverName' where Member_id='$email' ";
             $updateResult=mysqli_query($db_connect,$sql);
 
         }

@@ -50,6 +50,7 @@
             $arr['postRegTime']=$Data['Post_reg_time'];
             $arr['postViewNum']=$Data['Post_view'];
             $arr['postLikeNum']=$Data['Post_like'];
+            $arr['postStatus']=$Data['Post_status'];
 
             //위치정보
             if($Data['Post_location_address']==="장소정보 없음"){

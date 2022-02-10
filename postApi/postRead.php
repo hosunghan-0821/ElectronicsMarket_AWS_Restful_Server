@@ -18,6 +18,7 @@
             $nickname=$Data['Member_nickname'];
             $addressDetail=$Data['Member_standard_address'];
             $deliveryRequire=$Data['Member_standard_delivery_require'];
+            $receiverName=$Data['Member_standard_receiver_name'];
 
             $clientNickname=$nickname;
         }
@@ -26,8 +27,8 @@
         //  $sql = "UPDATE PostTable SET Post_View = Post_View + 1 WHERE Post_Number='$serialNum'";
         if($_POST['purpose']==="read"){
 
-            $sql="UPDATE Post SET Post_view=Post_view + 1 WHERE Post_no='$postNum' ";
-            mysqli_query($db_connect,$sql);
+            // $sql="UPDATE Post SET Post_view=Post_view + 1 WHERE Post_no='$postNum' ";
+            // mysqli_query($db_connect,$sql);
 
         }
         //getPost의 목적이 택배결제를 하기위해 불려진것이라면
@@ -35,6 +36,7 @@
 
             $arr['addressDetail']=$addressDetail;
             $arr['deliveryRequire']=$deliveryRequire;
+            $arr['receiverName']=$receiverName;
 
         }
 
@@ -92,6 +94,9 @@
             $arr['postRegTime']=$Data['Post_reg_time'];
             $arr['postViewNum']=$Data['Post_view'];
             $arr['postLikeNum']=$Data['Post_like'];
+
+            //판매상태
+            $arr['postStatus']=$Data['Post_status'];
             
             //위치정보
             if($Data['Post_location_address']==="장소정보 없음"){

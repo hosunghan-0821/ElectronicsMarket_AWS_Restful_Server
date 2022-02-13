@@ -22,6 +22,7 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/realMarketServer/lib/dbConnect.php';
        
         //결제방법
         $arr['tradeRegTime']=$Data['Trade_reg_time'];
+        $arr['tradeBuyer']=$Data['Trade_buyer'];
         $arr['tradeSeller']=$Data['Trade_seller'];
         $arr['tradePayType']=$Data['Trade_pay_type'];
 

@@ -4,6 +4,7 @@
     include_once 'simple_html_dom.php';
 
 
+
     //get 방식으로 curl 해서 데이터를 크롤링 하려고할 경우.
     function file_get_contents_curl($url){
         $ch = curl_init();
@@ -46,6 +47,31 @@
         curl_close($ch);
         return $data;
     }
+    function set_delivery_status($tradeNum){
+        require_once $_SERVER['DOCUMENT_ROOT'].'/realMarketServer/lib/dbConnect.php';
+
+    
+        //배송상태 변경을 위한 작업
+        $sql="UPDATE Trade_delivery_info SET Delivery_status='배송완료' where Delivery_trade_no='$tradeNum' ";
+        $updateResult=mysqli_query($db_connect,$sql);
+        if($updateResult){
+            // 해당하는 거래번호가 어느 게시물의 거래번혼지 확인하고 db변경해주기 위한 작업
+          $sql="SELECT * from Post_trade where Trade_no='$tradeNum'";
+          $selectResult=mysqli_query($db_connect,$sql);
+          $Data=mysqli_fetch_array($selectResult);
+          $postNum=$Data['Trade_post_no'];
+
+          $sql="SELECT Post_status FROM Post where Post_no='$postNum'";
+          $selectResult=mysqli_query($db_connect,$sql);
+          $Data=mysqli_fetch_array($selectResult);
+
+          if($Data['Post_status']!=='S'){
+            $sql="UPDATE Post SET Post_status='DF' where Post_no=$postNum ";
+            $updateResult=mysqli_query($db_connect,$sql);
+          }
+        
+        }
+    }
 
     if(isset($_POST['deliveryCompany'])){
 
@@ -53,6 +79,7 @@
         if($_POST['deliveryCompany']==="한진택배"){
             $deliveryCompany=$_POST['deliveryCompany'];
             $deliveryNum=$_POST['deliveryNum'];
+            $tradeNum=$_POST['tradeNum'];
             $url="https://www.hanjin.co.kr/kor/CMS/DeliveryMgr/WaybillResult.do?mCode=MN038&wblnum=".$deliveryNum."&schLang=KR&wblnumText=";
             $str=file_get_contents_curl($url);
             $dom = new simple_html_dom();
@@ -89,6 +116,7 @@
             $checkDelivery=$dom->find("p.comm-sec")[0]->plaintext;
             if(preg_match("/배송완료/", $checkDelivery)){
                 $arr['deliveryStatus']="배송완료";
+                set_delivery_status($tradeNum);
             }
             else{
                 $arr['deliveryStatus']="배송중";
@@ -104,6 +132,7 @@
 
             $deliveryCompany=$_POST['deliveryCompany'];
             $deliveryNum=$_POST['deliveryNum'];
+            $tradeNum=$_POST['tradeNum'];
 
             $url="https://www.lotteglogis.com/home/reservation/tracking/linkView";
             $data = "InvNo=".$deliveryNum;
@@ -150,6 +179,7 @@
             $info['detailArr']=$detailArr;
             if(preg_match("/배달완료/",$arr[1]->find("td")[3]->plaintext)){
                 $info['deliveryStatus']="배송완료";
+                set_delivery_status($tradeNum);
             }
             else{
                 $info["deliveryStatus"]="배송중";
@@ -164,6 +194,7 @@
         else if($_POST['deliveryCompany']==="우체국택배"){
             $deliveryCompany=$_POST['deliveryCompany'];
             $deliveryNum=$_POST['deliveryNum'];
+            $tradeNum=$_POST['tradeNum'];
 
             $url ="https://service.epost.go.kr/trace.RetrieveDomRigiTraceList.comm?sid1=".$deliveryNum."&displayHeader=N";
             $str = file_get_contents($url);
@@ -187,6 +218,7 @@
             }
             if($deliveryCheck=="배달완료"){
                 $info['deliveryStatus']="배송완료";
+                set_delivery_status($tradeNum);
             }
             else{
                 $info['deliveryStatus']="배송중";
@@ -232,8 +264,10 @@
 
         //cj 대한통운일 경우
         else if($_POST['deliveryCompany']==="CJ대한통운"){
+
             $deliveryCompany=$_POST['deliveryCompany'];
             $deliveryNum=$_POST['deliveryNum'];
+            $tradeNum=$_POST['tradeNum'];
 
             $url="https://www.doortodoor.co.kr/parcel/doortodoor.do";
             $data = "invc_no=".$deliveryNum."&fsp_action=PARC_ACT_002&fsp_cmd=retrieveInvNoACT2";
@@ -279,10 +313,15 @@
             $deliveryCheck=$tr[$size-1]->find("td")[0]->plaintext;
             // $deliveryCheck=str_replace("\t","",$deliveryCheck);
             if(preg_match("/배달완료/",$deliveryCheck)){
+
                 $info['deliveryStatus']="배송완료";
+                set_delivery_status($tradeNum);
+
             }
             else{
+
                 $info['deliveryStatus']="배송중";
+
             }
             $info['timeArr']=$timeArr;
             $info['placeArr']=$placeArr;
@@ -295,22 +334,4 @@
       
     }
 
-    else{
-        $asd;
-    }
-
-    $asd;
-        // $deliveryNum="421804437784";
-    // $url ="http://ec2-3-34-199-7.ap-northeast-2.compute.amazonaws.com/realMarketServer/lib/gs25.php?invoice=210074072073";
-    // $str = file_get_contents_curl($url);
-    // $dom = new simple_html_dom();
-    // $dom->load($str);
-    // echo $str;
-
-    // $data=$dom->find("li");
-    // // echo $data;
-    // foreach($data as $unit){
-    //     echo $unit;
-    // }
-    // echo $str; 
 ?>

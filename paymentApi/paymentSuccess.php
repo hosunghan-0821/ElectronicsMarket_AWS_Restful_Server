@@ -47,9 +47,9 @@
 
         $sellerNickname=$Data['Post_writer'];
         $nowDate = date("Y/m/d-H:i:s");
-
+        $buySuccessDate= date("Y-m-d H:i:s");
         //post table update 해줘야함 누가 이 게시글 제품을 샀는지.
-        $sql="UPDATE Post SET Post_buyer='$buyerNickname' where Post_no='$postNum'";
+        $sql="UPDATE Post SET Post_buyer='$buyerNickname',Post_buy_reg_time='$buySuccessDate' where Post_no='$postNum'";
         mysqli_query($db_connect,$sql);
 
         //결제정보 모아놓는 trade table에 정보 기입

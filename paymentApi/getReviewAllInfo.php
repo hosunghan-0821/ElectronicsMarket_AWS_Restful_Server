@@ -15,6 +15,24 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/realMarketServer/lib/dbConnect.php';
         $selectResult=mysqli_query($db_connect,$sql);
         $Data=mysqli_fetch_array($selectResult);
         $nickname=$Data['Member_nickname'];
+        if(isset($_POST['nickname'])){
+            $nickname=$_POST['nickname'];
+        }
+        //전체 리뷰갯수를 알기위해!
+        $sql="SELECT * FROM Post as a INNER JOIN Post_review as b on a.Post_no = b.Review_post_no where Post_writer='$nickname' ORDER BY b.Review_no desc";
+        $selectResult=mysqli_query($db_connect,$sql);
+        $totalReview=mysqli_num_rows($selectResult);
+        $reviewAllInfo['totalReviewNum']=$totalReview;
+
+        //전체 평점을 알기위해,
+        $sql="SELECT Member_review_score FROM Market_member where Member_nickname='$nickname'";
+        $selectResult=mysqli_query($db_connect,$sql);
+        $Data=mysqli_fetch_array($selectResult);
+        $reviewAllInfo['totalReviewScore']=$Data['Member_review_score'];
+
+        //해당 
+
+
         //SELECT * FROM hosung.Post as a INNER JOIN hosung.Post_review as b on a.Post_no=b.Review_post_no where Post_writer='hosung12' order by b.Review_no desc
         if($finalReviewNum==='0'){
             $sql="SELECT * FROM Post as a INNER JOIN Post_review as b on a.Post_no = b.Review_post_no where Post_writer='$nickname' ORDER BY b.Review_no desc limit $phasingNum";
@@ -32,6 +50,7 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/realMarketServer/lib/dbConnect.php';
                 $postNum=$Data['Post_no'];
                 $postBuyer=$Data['Post_buyer'];
                 
+
                 //상품관련
                 $arr['postTitle']=$Data['Post_title'];
                 $arr['postNum']=$postNum;

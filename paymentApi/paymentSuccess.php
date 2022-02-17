@@ -11,6 +11,9 @@
         $payType=$_POST['payType'];
         $tradeType=$_POST['tradeType'];
         $receiverName=$_POST['buyerName'];
+        
+        //카카오페이로 결제시
+        $kakaoTid=$_POST['tid'];
       
         //request로 넘어온 변수들 정의 주소지 관련
         $address=$_POST['address'];
@@ -59,8 +62,10 @@
         Trade_seller,
         Trade_type,
         Trade_pay_type,
-        Trade_reg_time) 
-        values('$postNum','$buyerNickname','$sellerNickname','$tradeType','$payType','$nowDate')";
+        Trade_reg_time,
+        Trade_kakao_tid
+        ) 
+        values('$postNum','$buyerNickname','$sellerNickname','$tradeType','$payType','$nowDate','$kakaoTid')";
         $insertResult=mysqli_query($db_connect,$sql);
 
         if($insertResult){

@@ -12,7 +12,7 @@
         $allInfo['imageRoute']=$Data['Member_image_route'];
 
         if($selectResult){
-            $sql="SELECT * FROM Post WHERE Post_writer='$nickName' order by Post_no DESC";
+            $sql="SELECT * FROM Post WHERE (Post_writer='$nickName' and Post_status='Y')  order by Post_no DESC";
             $selectResult=mysqli_query($db_connect,$sql);
             if($selectResult){
 

@@ -103,6 +103,7 @@ include_once '../lib/simple_html_dom.php';
                     $checkDelivery=$dom->find("p.comm-sec")[0]->plaintext;
                     //배송조회 성공 및 배송완료 표시가 떠잇을 경우, 배송완료 표시로 처리
                     if($size!=0 && preg_match("/배송완료/", $checkDelivery) ){
+                        $arr['deliveryStatus']="배송완료";
                         set_delivery_status($tradeNum);
                     }
                     //그렇지 않을 경우, 배송중으로표시
@@ -126,6 +127,7 @@ include_once '../lib/simple_html_dom.php';
                     
                     $asd=str_replace("\t","",$asd);
                     if($asd!="보내시는 고객님께서 상품 발송 준비중입니다." &&  preg_match("/배달완료/",$domArr[1]->find("td")[3]->plaintext)){
+                        $arr['deliveryStatus']="배송완료";
                         set_delivery_status($tradeNum);
                     }
                     else{
@@ -146,6 +148,7 @@ include_once '../lib/simple_html_dom.php';
                     
                     $deliveryCheck=$domArr[1]->find("td")[4]->plaintext;
                     if($deliveryCheck=="배달완료"){
+                        $arr['deliveryStatus']="배송완료";
                         set_delivery_status($tradeNum);
                     }
                     else{
@@ -169,6 +172,7 @@ include_once '../lib/simple_html_dom.php';
                     $deliveryCheck=$tr[$size-1]->find("td")[0]->plaintext;
 
                     if(!preg_match("/조회된 데이터가 없습니다./", $exceptionCheck) && preg_match("/배달완료/",$deliveryCheck) ){
+                        $arr['deliveryStatus']="배송완료";
                         set_delivery_status($tradeNum);
                     }
                     else{

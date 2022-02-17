@@ -119,7 +119,7 @@
                 $sql="SELECT * FROM Post AS a INNER JOIN Post_trade AS b on (a.Post_no=b.Trade_post_no) WHERE (Trade_buyer='$nickname' and Post_status !='Y' and Post_status !='S'   ) ORDER BY Post_buy_reg_time DESC limit $phasingNum";
             }
             else{
-                $sql="SELECT * FROM Post AS a INNER JOIN Post_trade AS b on (a.Post_no=b.Trade_post_no) where (str_to_date(Post_buy_reg_time,'%Y-%m-%d %H:%i:%s')<'$finalPostNum' and Trade_buyer='$nickname' and Post_status!='Y' and Post_status !='S' ) ORDER BY Post_buy_reg_time DESC";
+                $sql="SELECT * FROM Post AS a INNER JOIN Post_trade AS b on (a.Post_no=b.Trade_post_no) where (str_to_date(Post_buy_reg_time,'%Y-%m-%d %H:%i:%s')>='$finalPostNum' and Trade_buyer='$nickname' and Post_status!='Y' and Post_status !='S' ) ORDER BY Post_buy_reg_time DESC";
             }
          
         }
@@ -184,9 +184,23 @@
             
             $arr['postNum']=$postNum;
 
+            //해당 상품의 리뷰가 존재하는지 true/ false로 응답해주자
+
+
+
+
             //이 데이터를 가져오는 목적이 판매완료된 제품일 경우 해당하는
             if($_POST['purpose']==="soldInfo"||$_POST['purpose']==="buyingInfo"||$_POST['purpose']==="boughtInfo"){
                 $arr['tradeNum']=$Data['Trade_no'];
+
+                $sql="SELECT * FROM Post_review where Review_post_no='$postNum'";
+                $isHasReview=mysqli_query($db_connect,$sql);
+                if(mysqli_num_rows($isHasReview)>=1){
+                    $arr['isReview']=true;
+                }
+                else{
+                    $arr['isReview']=false;
+                }
             }
 
 

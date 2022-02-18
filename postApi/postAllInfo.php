@@ -104,11 +104,11 @@
         //onresume이 아닐경우
         if($phasingNum!=='update'){
             if($finalPostNum==='0'){
-                $sql="SELECT * FROM Post AS a INNER JOIN Post_trade AS b on (a.Post_no=b.Trade_post_no) WHERE (Trade_buyer='$nickname' and Post_status !='Y' and Post_status !='S'   ) ORDER BY Post_buy_reg_time DESC limit $phasingNum";
+                $sql="SELECT * FROM Post AS a INNER JOIN Post_trade AS b on (a.Post_no=b.Trade_post_no) WHERE (Trade_buyer='$nickname' and Post_status !='Y' and Post_status !='S' AND Post_status !='RF' AND Post_status !='RR'  ) ORDER BY Post_buy_reg_time DESC limit $phasingNum";
             }
             //커서가 존재할 경우
             else{
-                $sql="SELECT * FROM Post AS a INNER JOIN Post_trade AS b on (a.Post_no=b.Trade_post_no) where (Post_status!='Y'and Post_status !='S' and str_to_date(Post_buy_reg_time,'%Y-%m-%d %H:%i:%s')<'$finalPostNum' and Trade_buyer='$nickname' ) ORDER BY Post_buy_reg_time DESC limit $phasingNum ";
+                $sql="SELECT * FROM Post AS a INNER JOIN Post_trade AS b on (a.Post_no=b.Trade_post_no) where (Post_status!='Y'and  Post_status !='S'  AND Post_status !='RF' AND Post_status !='RR'  and str_to_date(Post_buy_reg_time,'%Y-%m-%d %H:%i:%s')<'$finalPostNum' and Trade_buyer='$nickname' ) ORDER BY Post_buy_reg_time DESC limit $phasingNum ";
             }
         }
         //onresume이 일 경우
@@ -116,15 +116,13 @@
              //커서가 없을경우
             if($finalPostNum==='0'){
                 $phasingNum=5;
-                $sql="SELECT * FROM Post AS a INNER JOIN Post_trade AS b on (a.Post_no=b.Trade_post_no) WHERE (Trade_buyer='$nickname' and Post_status !='Y' and Post_status !='S'   ) ORDER BY Post_buy_reg_time DESC limit $phasingNum";
+                $sql="SELECT * FROM Post AS a INNER JOIN Post_trade AS b on (a.Post_no=b.Trade_post_no) WHERE (Trade_buyer='$nickname' and Post_status !='Y' and Post_status !='S' AND Post_status !='RR' AND Post_status !='RF'   ) ORDER BY Post_buy_reg_time DESC limit $phasingNum";
             }
             else{
-                $sql="SELECT * FROM Post AS a INNER JOIN Post_trade AS b on (a.Post_no=b.Trade_post_no) where (str_to_date(Post_buy_reg_time,'%Y-%m-%d %H:%i:%s')>='$finalPostNum' and Trade_buyer='$nickname' and Post_status!='Y' and Post_status !='S' ) ORDER BY Post_buy_reg_time DESC";
+                $sql="SELECT * FROM Post AS a INNER JOIN Post_trade AS b on (a.Post_no=b.Trade_post_no) where (str_to_date(Post_buy_reg_time,'%Y-%m-%d %H:%i:%s')>='$finalPostNum' and Trade_buyer='$nickname' and Post_status!='Y' and Post_status !='S' AND Post_status !='RR' AND Post_status !='RF' ) ORDER BY Post_buy_reg_time DESC";
             }
-         
+        
         }
-
-
     }
 
     else if($_POST['purpose']==="boughtInfo"){
@@ -158,13 +156,42 @@
             else{
                 $sql="SELECT * FROM Post AS a INNER JOIN Post_trade AS b on (a.Post_no=b.Trade_post_no) where ( str_to_date(Post_trade_confirm_time,'%Y-%m-%d %H:%i:%s')>='$finalPostNum' and Trade_buyer='$nickname' and Post_status ='S' ) ORDER BY Post_trade_confirm_time DESC";
             }
-
-           
-        }
-
         
+        }
+    }
+    else if($_POST['purpose']==="cancelInfo"){
 
+        $email=$_POST['email'];
 
+        //email 통해서 닉네임 가져오기
+        $sql="SELECT Member_nickname FROM Market_member where Member_id='$email'";
+        $selectResult=mysqli_query($db_connect,$sql);
+        $Data=mysqli_fetch_array($selectResult);
+        $nickname=$Data['Member_nickname'];
+
+        //onresume이 아닐경우
+        if($phasingNum!=='update'){
+            if($finalPostNum==='0'){
+                $sql="SELECT * FROM Post AS a INNER JOIN Post_trade AS b INNER JOIN Trade_refund AS c on (a.Post_no=b.Trade_post_no and a.Post_no=c.Refund_post_no) WHERE (Trade_buyer='$nickname' and (Post_status ='RF' OR Post_status='RR')) ORDER BY c.Refund_reg_time desc limit $phasingNum";
+            }
+            //커서가 존재할 경우
+            else{
+                $sql="SELECT * FROM Post AS a INNER JOIN Post_trade AS b INNER JOIN Trade_refund AS c on (a.Post_no=b.Trade_post_no and a.Post_no=c.Refund_post_no) where ( (Post_status ='RF' OR Post_status='RR') and str_to_date(c.Refund_reg_time,'%Y-%m-%d %H:%i:%s')<'$finalPostNum' and Trade_buyer='$nickname' ) ORDER BY c.Refund_reg_time desc limit $phasingNum";
+            }
+        }
+         //onresume이 일 경우
+        else{
+
+            if($finalPostNum==='0'){
+                $phasingNum=5;
+                $sql="SELECT * FROM Post AS a INNER JOIN Post_trade AS b INNER JOIN Trade_refund AS c on (a.Post_no=b.Trade_post_no and a.Post_no=c.Refund_post_no) WHERE (Trade_buyer='$nickname' and (Post_status ='RF' OR Post_status='RR')) ORDER BY c.Refund_reg_time desc limit $phasingNum";
+            }
+            //커서가 있을경우.
+            else{
+                $sql="SELECT * FROM Post AS a INNER JOIN Post_trade AS b INNER JOIN Trade_refund AS c on (a.Post_no=b.Trade_post_no and a.Post_no=c.Refund_post_no) where ( (Post_status ='RF' OR Post_status='RR') and str_to_date(c.Refund_reg_time,'%Y-%m-%d %H:%i:%s')>='$finalPostNum' and Trade_buyer='$nickname' ) ORDER BY c.Refund_reg_time desc ";
+            }
+
+        }
 
     }
    
@@ -203,6 +230,8 @@
                 }
             }
 
+            //환불시간
+            $arr['refundRegTime']=$Data['Refund_reg_time'];
 
             //구매확정 시간
             $arr['tradeConfirmTime']=$Data['Post_trade_confirm_time'];

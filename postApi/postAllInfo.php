@@ -194,6 +194,41 @@
         }
 
     }
+    else if($_POST['purpose']==="cancelSellInfo"){
+
+        $email=$_POST['email'];
+
+        //email 통해서 닉네임 가져오기
+        $sql="SELECT Member_nickname FROM Market_member where Member_id='$email'";
+        $selectResult=mysqli_query($db_connect,$sql);
+        $Data=mysqli_fetch_array($selectResult);
+        $nickname=$Data['Member_nickname'];
+
+
+         //onresume이 아닐경우
+         if($phasingNum!=='update'){
+            if($finalPostNum==='0'){
+                $sql="SELECT * FROM Post AS a INNER JOIN Post_trade AS b INNER JOIN Trade_refund AS c on (a.Post_no=b.Trade_post_no and a.Post_no=c.Refund_post_no) WHERE (Trade_Seller='$nickname' and (Post_status ='RF' OR Post_status='RR')) ORDER BY c.Refund_reg_time desc limit $phasingNum";
+            }
+            //커서가 존재할 경우
+            else{
+                $sql="SELECT * FROM Post AS a INNER JOIN Post_trade AS b INNER JOIN Trade_refund AS c on (a.Post_no=b.Trade_post_no and a.Post_no=c.Refund_post_no) where ( (Post_status ='RF' OR Post_status='RR') and str_to_date(c.Refund_reg_time,'%Y-%m-%d %H:%i:%s')<'$finalPostNum' and Trade_Seller='$nickname' ) ORDER BY c.Refund_reg_time desc limit $phasingNum";
+            }
+        }
+         //onresume이 일 경우
+        else{
+
+            if($finalPostNum==='0'){
+                $phasingNum=5;
+                $sql="SELECT * FROM Post AS a INNER JOIN Post_trade AS b INNER JOIN Trade_refund AS c on (a.Post_no=b.Trade_post_no and a.Post_no=c.Refund_post_no) WHERE (Trade_Seller='$nickname' and (Post_status ='RF' OR Post_status='RR')) ORDER BY c.Refund_reg_time desc limit $phasingNum";
+            }
+            //커서가 있을경우.
+            else{
+                $sql="SELECT * FROM Post AS a INNER JOIN Post_trade AS b INNER JOIN Trade_refund AS c on (a.Post_no=b.Trade_post_no and a.Post_no=c.Refund_post_no) where ( (Post_status ='RF' OR Post_status='RR') and str_to_date(c.Refund_reg_time,'%Y-%m-%d %H:%i:%s')>='$finalPostNum' and Trade_Seller='$nickname' ) ORDER BY c.Refund_reg_time desc ";
+            }
+
+        }
+    }
    
     
     $selectResult=mysqli_query($db_connect,$sql);

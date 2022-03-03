@@ -3,10 +3,16 @@
       
       if(isset($_POST['roomNum'])){
 
-
+          $nickname=$_POST['nickname'];
           $roomNum=$_POST['roomNum'];
           $phasingNum=$_POST['phasingNum'];
           $finalChatNum=$_POST['cursorChatNum'];
+
+
+          //채팅방에 들어왔을 경우, 데이터 읽음 처리를 해야한다. 
+          $sql="UPDATE Chat_content set Chat_read='1' where (Chat_room_no='$roomNum' and Chat_member !='$nickname') ";
+          $updateResult=mysqli_query($db_connect,$sql);
+
 
           //페이징 커서 없을 때,
           if($finalChatNum==0){
@@ -33,5 +39,6 @@
               $chatDataAll['chatNum']=$chatNum;
               echo json_encode($chatDataAll,JSON_UNESCAPED_UNICODE);
           }
+
       }
 ?>

@@ -6,13 +6,14 @@
         $id=$_POST['id'];
         $password=$_POST['password'];
 
-        $sql="SELECT Member_id, Member_password FROM Market_member Where Member_id='$id'";
+        $sql="SELECT Member_id, Member_password,Member_nickname FROM Market_member Where Member_id='$id'";
         $selectResult= mysqli_query($db_connect,$sql);
         $Data= mysqli_fetch_array($selectResult);
 
         if($Data!=null){
 
             if($Data['Member_password']===$password){
+                $arr['nickname']=$Data['Member_nickname'];
                 $arr['message']='로그인 성공';
                 echo json_encode($arr,JSON_UNESCAPED_UNICODE);
             }

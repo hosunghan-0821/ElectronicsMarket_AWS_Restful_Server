@@ -73,7 +73,7 @@
         $arr['otherUserImageRoute']=$otherUserData['Member_image_route'];
         $arr['otherUserNickname']=$otherUserNickname;
     }
-
+    $arr['postSellType']=$Data['Post_sellType'];
     $arr['postNum']=$Data['Post_no'];
     $arr['postTitle']=$Data['Post_title'];
     $arr['postPrice']=$Data['Post_price'];

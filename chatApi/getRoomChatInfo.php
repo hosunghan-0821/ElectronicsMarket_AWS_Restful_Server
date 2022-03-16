@@ -13,17 +13,65 @@
           $sql="UPDATE Chat_content set Chat_read='1' where (Chat_room_no='$roomNum' and Chat_member !='$nickname') ";
           $updateResult=mysqli_query($db_connect,$sql);
 
+          $sql="SELECT Chat_no From Chat_content where ((Chat_room_out_check_1='$nickname' or Chat_room_out_check_2='$nickname') and Chat_room_no='$roomNum') ";
+          $selectResult0=mysqli_query($db_connect,$sql);
+          $checkedData=mysqli_fetch_array($selectResult0);
+          $chatCheckedNum=$checkedData['Chat_no'];
 
           //페이징 커서 없을 때,
-          if($finalChatNum==0){
-                $sql="SELECT * FROM Chat_content where Chat_room_no='$roomNum' Order by Chat_no desc limit $phasingNum";
-              //$sql="SELECT * FROM Chat_content where Chat_room_no='$roomNum' Order by Chat_reg_time desc limit $phasingNum";
+          if($phasingNum!=="update"){
+
+                if($finalChatNum==0){
+
+                    if($chatCheckedNum==null){
+                        $sql="SELECT * FROM Chat_content where Chat_room_no='$roomNum' Order by Chat_no desc limit $phasingNum";
+                    }
+                    else{
+                        $sql="SELECT * FROM Chat_content where Chat_room_no='$roomNum' and Chat_no>$chatCheckedNum Order by Chat_no desc limit $phasingNum";
+                    }
+                   
+                    //$sql="SELECT * FROM Chat_content where Chat_room_no='$roomNum' Order by Chat_reg_time desc limit $phasingNum";
+                }
+                //기존의 커서가 존재하면 그 커서 기준으로 phasing 개수만큼 가져오기
+                else{
+                    if($chatCheckedNum==null){
+                        $sql="SELECT * FROM Chat_content where (Chat_room_no='$roomNum' and Chat_no<'$finalChatNum') Order by Chat_no desc limit $phasingNum ";
+                    }
+                    else{
+                        $sql="SELECT * FROM Chat_content where (Chat_room_no='$roomNum' and Chat_no<'$finalChatNum' and Chat_no>$chatCheckedNum) Order by Chat_no desc limit $phasingNum ";
+                    }
+                
+                    //$sql="SELECT * FROM Chat_content where (Chat_room_no='$roomNum' and str_to_date(Chat_reg_time,'%Y-%m-%d %H:%i:%s')<'$finalChatNum') Order by Chat_reg_time desc limit $phasingNum ";
+                }
           }
-          //기존의 커서가 존재하면 그 커서 기준으로 phasing 개수만큼 가져오기
           else{
-            $sql="SELECT * FROM Chat_content where (Chat_room_no='$roomNum' and Chat_no<'$finalChatNum') Order by Chat_no desc limit $phasingNum ";
-              //$sql="SELECT * FROM Chat_content where (Chat_room_no='$roomNum' and str_to_date(Chat_reg_time,'%Y-%m-%d %H:%i:%s')<'$finalChatNum') Order by Chat_reg_time desc limit $phasingNum ";
+
+            //커서가 없을 경우
+            if($finalChatNum==0){
+                
+                if($chatCheckedNum==null){
+                    $phasingNum=10;
+                    $sql="SELECT * FROM Chat_content where Chat_room_no='$roomNum' Order by Chat_no desc limit $phasingNum";
+                }
+                else{
+                    $phasingNum=10;
+                    $sql="SELECT * FROM Chat_content where Chat_room_no='$roomNum' and Chat_no>$chatCheckedNum Order by Chat_no desc limit $phasingNum";
+                }
+             
+                //$sql="SELECT * FROM Chat_content where Chat_room_no='$roomNum' Order by Chat_reg_time desc limit $phasingNum";
+            }
+            //커서가 존재할 경우
+            else{
+                if($chatCheckedNum==null){
+                    $sql="SELECT * FROM Chat_content where (Chat_room_no='$roomNum' and Chat_no>='$finalChatNum') Order by Chat_no desc" ;
+                }
+                else{
+                    $sql="SELECT * FROM Chat_content where (Chat_room_no='$roomNum' and Chat_no>='$finalChatNum' and Chat_no>$chatCheckedNum) Order by Chat_no desc" ;
+                }
+            }
+
           }
+
           $chatData=array();
           $chatDataAll=array();
 

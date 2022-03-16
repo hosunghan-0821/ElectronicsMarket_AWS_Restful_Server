@@ -51,6 +51,23 @@
         if($Data['Room_final_caht_reg_time']===null){
           continue;
         }
+        $sql="SELECT * FROM Chat_content where ((Chat_room_out_check_1='$nickname' or Chat_room_out_check_2='$nickname') and Chat_room_no =$roomNum) ";
+        $selectResult0=mysqli_query($db_connect,$sql);
+
+        if(mysqli_num_rows($selectResult0)>0){
+          //방 나가기 체크되어있다면,
+          $selectResult0=mysqli_query($db_connect,$sql);
+          $checkData=mysqli_fetch_array($selectResult0);
+          $checkedChatNum=$checkData['Chat_no'];
+
+          $sql="SELECT * FROM Chat_content where Chat_room_no=$roomNum order by Chat_no Desc";
+          $selectResult0=mysqli_query($db_connect,$sql);
+          $checkData=mysqli_fetch_array($selectResult0);
+          $chatNum=$checkData['Chat_no'];
+          if($checkedChatNum>=$chatNum){
+            continue;
+          }
+        }
 
 
         //유저가 구매자 입장일 경우, 판매자 정보를 전달
@@ -86,11 +103,22 @@
         // $arr['finalChatTime']=$finalChatData['Chat_reg_time'];
 
         //채팅방 읽지 않은 메시지 몇개인지 query해서 이정보도 전달.
-        $sql="SELECT * FROM Chat_content where (Chat_member='$otherUserNickname' and Chat_room_no='$roomNum' and Chat_read='0')";
-        $noReadData=mysqli_query($db_connect,$sql);
-        $noReadMessage=mysqli_num_rows($noReadData);
-        $arr['noReadMessageNum']=$noReadMessage;
-
+        $sql="SELECT Chat_no From Chat_content where ((Chat_room_out_check_1='$nickname' or Chat_room_out_check_2='$nickname') and Chat_room_no='$roomNum') ";
+        $selectResult0=mysqli_query($db_connect,$sql);
+        $checkedData=mysqli_fetch_array($selectResult0);
+        $chatNum=$checkedData['Chat_no'];
+        if($chatNum==null){
+          $sql="SELECT * FROM Chat_content where (Chat_member='$otherUserNickname' and Chat_room_no='$roomNum' and Chat_read='0')";
+          $noReadData=mysqli_query($db_connect,$sql);
+          $noReadMessage=mysqli_num_rows($noReadData);
+          $arr['noReadMessageNum']=$noReadMessage;
+        }
+        else{
+          $sql="SELECT * FROM Chat_content where(Chat_member='$otherUserNickname' and Chat_room_no='$roomNum' and Chat_read='0' and Chat_no>$chatNum)";
+          $noReadData=mysqli_query($db_connect,$sql);
+          $noReadMessage=mysqli_num_rows($noReadData);
+          $arr['noReadMessageNum']=$noReadMessage;
+        }
 
         //각 존재하는 방마다의 정보를 한 배열안에 차곡차곡담기
         array_push($chatRoomInfo,$arr);

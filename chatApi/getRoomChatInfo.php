@@ -77,7 +77,35 @@
 
           $selectResult=mysqli_query($db_connect,$sql);
           if($selectResult){
+              $skipDate=0;
               while($Data=mysqli_fetch_array($selectResult)){
+
+                //나가기 기록이 있고, 서버 날짜 채팅일 경우.
+                if( $Data['Chat_member']=='server'){
+                    
+                    $chatDate=$Data['Chat_text'];
+                    $chatNo=$Data['Chat_no'];
+                    if( $chatCheckedNum!=null){
+
+                        $sql="SELECT * FROM Chat_content where (Chat_room_no='$roomNum' and Chat_no>$chatCheckedNum and Chat_member='server' and Chat_text='$chatDate') order by Chat_no asc";
+                        $selectLastChatDate= mysqli_query($db_connect,$sql);
+                        $lastDateData=mysqli_fetch_array($selectLastChatDate);
+                        if($chatNo!=$lastDateData['Chat_no']){
+                            $skipDate++;
+                            continue;
+                        }
+                    }
+                    else{
+                        $sql="SELECT * FROM Chat_content where (Chat_room_no='$roomNum' and Chat_member='server' and Chat_text='$chatDate') order by Chat_no asc";
+                        $selectLastChatDate= mysqli_query($db_connect,$sql);
+                        $lastDateData=mysqli_fetch_array($selectLastChatDate);
+                        if($chatNo!=$lastDateData['Chat_no']){
+                            $skipDate++;
+                            continue;
+                        }
+                    }
+                }
+
                   $arr['chatNum']=$Data['Chat_no'];
                   $arr['nickname']=$Data['Chat_member'];
                   $arr['chat']=$Data['Chat_text'];
@@ -88,6 +116,9 @@
               }
               $chatDataAll['dataChatAllList']=$chatData;
               $chatNum=count($chatData);
+              //여기 추가하는 이유는, phasing을 넘어오는 데이터 개수10개인지 확인하면서 phasing 추가하는데 날짜 스킵해버리면 
+              //데이터 비는 문제.. 이걸 갯수 세서 표시
+              $chatNum+=$skipDate;
               $chatDataAll['chatNum']=$chatNum;
               echo json_encode($chatDataAll,JSON_UNESCAPED_UNICODE);
           }

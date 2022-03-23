@@ -19,7 +19,6 @@
          $sql="UPDATE Market_member SET Member_review_num=Member_review_num+1,Member_review_score=Member_review_score+$reviewRating where Member_nickname='$sellerNickName'";
          $updateResult=mysqli_query($db_connect,$sql);
          
-
         //email 갖고 닉네임 획득하기
        
         $sql="SELECT Member_nickname FROM Market_member where Member_id='$id'";
@@ -41,6 +40,7 @@
          $insertResult=mysqli_query($db_connect,$sql);
          if($insertResult){
              $arr['isSuccess']=true;
+             $arr['sellerNickname']=$sellerNickName;
              echo json_encode($arr,JSON_UNESCAPED_UNICODE);
              return;
          }

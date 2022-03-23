@@ -10,12 +10,14 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/realMarketServer/lib/dbConnect.php';
         $Data=mysqli_fetch_array($selectResult);
 
         //상품정보 데이터 select 하기
+
         $arr['postNum']=$Data['Post_no'];
         $arr['tradeTitle']=$Data['Post_title'];
         $arr['tradePrice']=$Data['Post_price'];
         $arr['tradeImageRoute']=$Data['Image_route'];
          //결제방식
         $arr['tradeType']=$Data['Trade_type'];
+        
        
 
         //구매정보 데이터 select하기

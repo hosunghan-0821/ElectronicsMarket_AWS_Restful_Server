@@ -72,20 +72,20 @@
 
         if($phasingNum!=='update'){
             if($finalPostNum==='0'){
-                $sql="SELECT * FROM Post AS a INNER JOIN Post_trade AS b on (a.Post_no=b.Trade_post_no) WHERE (Post_writer='$nickname' and Post_status !='Y' ) ORDER BY Post_buy_reg_time DESC limit $phasingNum";
+                $sql="SELECT * FROM Post AS a INNER JOIN Post_trade AS b on (a.Post_no=b.Trade_post_no) WHERE (Post_writer='$nickname' and Post_status !='Y' and Post_status !='RF' and Post_status !='RR' ) ORDER BY Post_buy_reg_time DESC limit $phasingNum";
             }
             //커서가 존재할 경우
             else{
-                $sql="SELECT * FROM Post where (Post_status!='Y' and str_to_date(Post_buy_reg_time,'%Y-%m-%d %H:%i:%s')<'$finalPostNum' and Post_writer='$nickname' ) ORDER BY Post_buy_reg_time DESC limit $phasingNum ";
+                $sql="SELECT * FROM Post where (Post_status!='Y'and Post_status !='RF' and Post_status !='RR' and str_to_date(Post_buy_reg_time,'%Y-%m-%d %H:%i:%s')<'$finalPostNum' and Post_writer='$nickname' ) ORDER BY Post_buy_reg_time DESC limit $phasingNum ";
             }
         }
         else{
             if($finalPostNum==='0'){
                 $phasingNum=5;
-                $sql="SELECT * FROM Post AS a INNER JOIN Post_trade AS b on (a.Post_no=b.Trade_post_no) WHERE (Post_writer='$nickname' and Post_status !='Y' ) ORDER BY Post_buy_reg_time DESC limit $phasingNum";
+                $sql="SELECT * FROM Post AS a INNER JOIN Post_trade AS b on (a.Post_no=b.Trade_post_no) WHERE (Post_writer='$nickname' and Post_status !='Y' and Post_status !='RF' and Post_status !='RR' ) ORDER BY Post_buy_reg_time DESC limit $phasingNum";
             }
             else{
-                $sql="SELECT * FROM Post AS a INNER JOIN Post_trade AS b on (a.Post_no=b.Trade_post_no) where (str_to_date(Post_buy_reg_time,'%Y-%m-%d %H:%i:%s')>='$finalPostNum' and Post_writer='$nickname' and Post_status !='Y' ) ORDER BY Post_buy_reg_time DESC";
+                $sql="SELECT * FROM Post AS a INNER JOIN Post_trade AS b on (a.Post_no=b.Trade_post_no) where (str_to_date(Post_buy_reg_time,'%Y-%m-%d %H:%i:%s')>='$finalPostNum' and Post_writer='$nickname' and Post_status !='Y' and Post_status !='RF' and Post_status !='RR' ) ORDER BY Post_buy_reg_time DESC";
             }
           
         }
@@ -241,16 +241,13 @@
             $arr['postTitle']=$Data['Post_title'];
             $arr['postPrice']=$Data['Post_price'];
             $arr['postSellType']=$Data['Post_sellType'];
-            $arr['postRegTime']=$Data['Post_reg_time']; 
+            $arr['postRegTime']=$Data['Post_reg_time'];
+            $arr['postTradeType']=$Data['Trade_type'];
             
-            
+          
             $arr['postNum']=$postNum;
 
             //해당 상품의 리뷰가 존재하는지 true/ false로 응답해주자
-
-
-
-
             //이 데이터를 가져오는 목적이 판매완료된 제품일 경우 해당하는
             if($_POST['purpose']==="soldInfo"||$_POST['purpose']==="buyingInfo"||$_POST['purpose']==="boughtInfo"){
                 $arr['tradeNum']=$Data['Trade_no'];

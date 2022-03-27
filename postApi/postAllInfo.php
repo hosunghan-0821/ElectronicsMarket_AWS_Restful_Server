@@ -76,7 +76,7 @@
             }
             //커서가 존재할 경우
             else{
-                $sql="SELECT * FROM Post where (Post_status!='Y'and Post_status !='RF' and Post_status !='RR' and str_to_date(Post_buy_reg_time,'%Y-%m-%d %H:%i:%s')<'$finalPostNum' and Post_writer='$nickname' ) ORDER BY Post_buy_reg_time DESC limit $phasingNum ";
+                $sql="SELECT * FROM Post AS a INNER JOIN Post_trade As b on (a.post_no=b.Trade_post_no) where (Post_status!='Y'and Post_status !='RF' and Post_status !='RR' and str_to_date(Post_buy_reg_time,'%Y-%m-%d %H:%i:%s')<'$finalPostNum' and Post_writer='$nickname' ) ORDER BY Post_buy_reg_time DESC limit $phasingNum ";
             }
         }
         else{

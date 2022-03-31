@@ -5,6 +5,7 @@
     
     if(isset($_GET['postNum'])){
 
+        $writer=$_GET['writer'];
         $postNum=$_GET['postNum'];
         $email=$_GET['email'];
         $sql="SELECT Member_nickname FROM Market_member where Member_id='$email'";
@@ -23,10 +24,31 @@
             while($Data=mysqli_fetch_array($selectResult)){
                 if($Data['Like_post']==$postNum){
                     $arr['isSuccess']=false;
+                    $notiSql="SELECT * FROM Notification_collect where Notification_post_num='$postNum' and Notification_member='$writer' and Notification_type='2'";
+                    $notiResult=mysqli_query($db_connect, $notiSql);
+                    
+                    if(mysqli_num_rows($notiResult)>0){
+                        $arr['likeNotification']=false;
+                    }
+                    else{
+                        $arr['likeNotification']=true;
+                    }
+
                     echo json_encode($arr,JSON_UNESCAPED_UNICODE);
                     return;
                 }
             }
+
+            $notiSql="SELECT * FROM Notification_collect where Notification_post_num='$postNum' and Notification_member='$writer' and Notification_type='2' and Notification_sender='$nickname'";
+            $notiResult=mysqli_query($db_connect, $notiSql);
+            
+            if(mysqli_num_rows($notiResult)>0){
+                $arr['likeNotification']=false;
+            }
+            else{
+                $arr['likeNotification']=true;
+            }
+
             
             //찜목록 테이블에 해당 정보들 insert
             $sql="INSERT INTO Post_like(Like_post,Like_person) values('$postNum','$nickname')";

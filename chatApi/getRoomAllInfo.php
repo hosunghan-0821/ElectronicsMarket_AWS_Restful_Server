@@ -10,6 +10,17 @@
     $finalChatRoom=$_POST['cursorChatRoom'];
     $phasingNum=$_POST['phasingNum'];
 
+
+    //받지 않은 알림체크까지 같이하자
+    $sql="SELECT * FROM Notification_collect where Notification_member='$nickname' and Notification_is_read='0'";
+    $selectResult=mysqli_query($db_connect,$sql);
+    if(mysqli_num_rows($selectResult)>0){
+      $chatRoomAllInfo['notification']=true;
+    }
+    else{
+      $chatRoomAllInfo['notification']=false;
+    }
+
     //일단 채팅 참여자중에 넘어온 유저 정보가 들어가 있는 채팅방에 대한 정보를 나타내주어야함. // 나중에 여기다 채팅방 저장한거 기록해서 inner join 박아야함
    
     //업데이트가 아닐 경우;

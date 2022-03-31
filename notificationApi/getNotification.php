@@ -42,6 +42,7 @@
             $arr['postNum']=$Data['Notification_post_num'];
             $arr['notificationNum']=$Data['Notification_no'];
             $arr['notificationRegTime']=$Data['Notification_reg_time'];
+            $arr['notificationIsRead']=$Data['Notification_is_read'];
 
             //만약 후기를 남겨줘야하는 notification일 경우, 리뷰가 존재하는지 확인해야함.
             if($Data['Notification_type']==='0'){

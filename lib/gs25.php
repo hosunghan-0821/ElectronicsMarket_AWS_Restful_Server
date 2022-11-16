@@ -117,7 +117,7 @@ echo $str;
 // }
 
 
-// $url ="http://ec2-3-34-199-7.ap-northeast-2.compute.amazonaws.com/realMarketServer/lib/crawling.php";
+// $url ="http://43.201.72.60/realMarketServer/lib/crawling.php";
 // $str = file_get_contents_curl($url);
 
 // $dom = new simple_html_dom();

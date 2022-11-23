@@ -22,7 +22,7 @@
             $file_name.=$nowDate.'_';
             $file_name.=$i.'.jpg';
             $result=move_uploaded_file($name,'../Resource/chatImage/'.$file_name);
-            $file_http_path="http://ec2-3-34-199-7.ap-northeast-2.compute.amazonaws.com/realMarketServer/Resource/chatImage/".$file_name;
+            $file_http_path="http://43.201.72.60/realMarketServer/Resource/chatImage/".$file_name;
             $sql="INSERT INTO Chat_image (Image_room_num,Image_route,Image_file_name,Image_reg_time) values($roomNum,'$file_http_path','$file_name','$nowDate')";
             $insertResult=mysqli_query($db_connect,$sql);
             //업로드 및 db 저장 성공시 해당 경로 client에게 전달.
